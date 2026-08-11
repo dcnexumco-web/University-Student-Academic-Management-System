@@ -1,4 +1,6 @@
 from validators import validate_email, validate_phone
+import database
+
 class Student:
 
     def __init__(
@@ -58,5 +60,7 @@ def register_student():
         level,
         registration_date
     )
+    
+    database.add_student(new_student)
 
     return new_student

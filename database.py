@@ -134,26 +134,24 @@ def add_student(student):
 
 
 
-def register_student():
-    student_id = input("Enter Student ID: ")
-    full_name = input("Enter Full Name: ")
-    email = input("Enter Email: ")
-    phone_number = input("Enter Phone Number: ")
-    date_of_birth = input("Enter Date of Birth (YYYY-MM-DD): ")
-    department_id = int(input("Enter Department ID: "))
-    level = int(input("Enter Level: "))
+def add_department(department_name):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
 
-    registration_date = input("Enter Registration Date (YYYY-MM-DD): ")
+    cursor.execute("""
+    INSERT INTO departments (department_name)
+    VALUES (?)
+    """, (department_name,))
 
-    new_student = Student(
-        student_id,
-        full_name,
-        email,
-        phone_number,
-        date_of_birth,
-        department_id,
-        level,
-        registration_date
-    )
+    connection.commit()
+    connection.close()
 
-    return new_student
+def get_departments():
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM departments")
+    departments = cursor.fetchall()
+
+    connection.close()
+    return departments
