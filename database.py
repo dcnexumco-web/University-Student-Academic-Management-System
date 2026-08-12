@@ -155,3 +155,49 @@ def get_departments():
 
     connection.close()
     return departments
+
+
+def get_students():
+    connection = sqlite3.connect('university.db')
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM students")
+    students = cursor.fetchall()
+
+    connection.close()
+    return students
+
+
+def find_student_by_id(student_id):
+    connection = sqlite3.connect('university.db')
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM students WHERE student_id = ?", (student_id,))
+    student = cursor.fetchone()
+
+    connection.close()
+    return student
+
+
+def update_student_field(student_id, field, new_value):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    query = f"UPDATE students SET {field} = ? WHERE student_id = ?"
+
+    cursor.execute(query, (new_value, student_id))
+
+    connection.commit()
+    connection.close()
+
+
+def delete_student(student_id):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("DELETE FROM students WHERE student_id = ?", (student_id,))
+
+    connection.commit()
+    connection.close()
+
+
