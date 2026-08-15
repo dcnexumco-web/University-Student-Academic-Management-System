@@ -100,7 +100,7 @@ if __name__ == "__main__":
     create_database()
 
 
-
+#STUDENT MANAGEMENT FUNCTIONS
 def add_student(student):
     connection = sqlite3.connect("university.db")
     cursor = connection.cursor()
@@ -201,3 +201,114 @@ def delete_student(student_id):
     connection.close()
 
 
+
+#COURSE MANAGEMENT FUNCTIONS
+
+def add_course(course):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("""
+    INSERT INTO courses (
+        course_code,
+        course_title,
+        course_unit,
+        semester,
+        department_id
+    )
+    VALUES (?, ?, ?, ?, ?)
+    """, (
+        course.course_code,
+        course.course_title,
+        course.course_unit,
+        course.semester,
+        course.department_id
+    ))
+
+    connection.commit()
+    connection.close()
+
+
+def get_courses():
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM courses")
+    courses = cursor.fetchall()
+
+    connection.close()
+
+    return courses
+
+
+def find_course_by_code(course_code):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "SELECT * FROM courses WHERE course_code = ?",
+        (course_code,)
+    )
+
+    course = cursor.fetchone()
+
+    connection.close()
+
+    return course
+
+def update_course_field(course_code, field, new_value):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    query = f"UPDATE courses SET {field} = ? WHERE course_code = ?"
+
+    cursor.execute(query, (new_value, course_code))
+
+    connection.commit()
+    connection.close()
+
+
+def delete_course(course_code):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "DELETE FROM courses WHERE course_code = ?",
+        (course_code,)
+    )
+
+    connection.commit()
+    connection.close()
+
+
+#RESULT MANAGEMENT FUNCTIONS
+
+def add_result(result):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO results (
+            student_id,
+            course_code,
+            test_score,
+            exam_score,
+            total_score,
+            grade,
+            grade_point,
+            quality_point
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        result.student_id,
+        result.course_code,
+        result.test_score,
+        result.exam_score,
+        result.total_score,
+        result.grade,
+        result.grade_point,
+        result.quality_point
+    ))
+
+    connection.commit()
+    connection.close()
