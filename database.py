@@ -365,3 +365,81 @@ def delete_result(result_id):
 
     connection.commit()
     connection.close()
+
+
+#ATTENDANCE MANAGEMENT FUNCTIONS
+
+def add_attendance(attendance):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO attendance (
+            student_id,
+            course_code,
+            attendance_date,
+            status
+        )
+        VALUES (?, ?, ?, ?)
+    """, (
+        attendance.student_id,
+        attendance.course_code,
+        attendance.attendance_date,
+        attendance.status
+    ))
+
+    connection.commit()
+    connection.close()
+
+
+def get_attendance():
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM attendance")
+    attendance_records = cursor.fetchall()
+
+    connection.close()
+
+    return attendance_records
+
+
+def find_attendance_by_student_id(student_id):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "SELECT * FROM attendance WHERE student_id = ?",
+        (student_id,)
+    )
+
+    attendance_records = cursor.fetchall()
+
+    connection.close()
+
+    return attendance_records
+
+
+def update_attendance_field(attendance_id, field, new_value):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    query = f"UPDATE attendance SET {field} = ? WHERE attendance_id = ?"
+
+    cursor.execute(query, (new_value, attendance_id))
+
+    connection.commit()
+    connection.close()
+
+
+def delete_attendance(attendance_id):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "DELETE FROM attendance WHERE attendance_id = ?",
+        (attendance_id,)
+    )
+
+    connection.commit()
+    connection.close()
