@@ -312,3 +312,56 @@ def add_result(result):
 
     connection.commit()
     connection.close()
+
+
+def get_results():
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM results")
+    results = cursor.fetchall()
+
+    connection.close()
+
+    return results
+
+
+def find_results_by_student_id(student_id):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "SELECT * FROM results WHERE student_id = ?",
+        (student_id,)
+    )
+
+    results = cursor.fetchall()
+
+    connection.close()
+
+    return results
+
+
+def update_result_field(result_id, field, new_value):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    query = f"UPDATE results SET {field} = ? WHERE result_id = ?"
+
+    cursor.execute(query, (new_value, result_id))
+
+    connection.commit()
+    connection.close()
+
+
+def delete_result(result_id):
+    connection = sqlite3.connect("university.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "DELETE FROM results WHERE result_id = ?",
+        (result_id,)
+    )
+
+    connection.commit()
+    connection.close()
