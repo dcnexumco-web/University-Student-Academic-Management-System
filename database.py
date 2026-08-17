@@ -105,46 +105,62 @@ def add_student(student):
     connection = sqlite3.connect("university.db")
     cursor = connection.cursor()
 
-    cursor.execute("""
-    INSERT INTO students (
-        student_id,
-        full_name,
-        email,
-        phone_number,
-        date_of_birth,
-        department_id,
-        level,
-        registration_date
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        student.student_id,
-        student.full_name,
-        student.email,
-        student.phone_number,
-        student.date_of_birth,
-        student.department_id,
-        student.level,
-        student.registration_date
-    ))
+    try:
+        cursor.execute("""
+            INSERT INTO students (
+                student_id,
+                name,
+                email,
+                phone,
+                date_of_birth,
+                department_id,
+                level,
+                registration_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            student.student_id,
+            student.name,
+            student.email,
+            student.phone,
+            student.date_of_birth,
+            student.department_id,
+            student.level,
+            student.registration_date
+        ))
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+        print("Student registered successfully.")
+
+    except sqlite3.IntegrityError:
+        print("Error: Student ID or email already exists.")
+
+    finally:
+        connection.close()
 
 
 
-
-def add_department(department_name):
+def add_department(department):
     connection = sqlite3.connect("university.db")
     cursor = connection.cursor()
 
-    cursor.execute("""
-    INSERT INTO departments (department_name)
-    VALUES (?)
-    """, (department_name,))
+    try:
+        cursor.execute("""
+            INSERT INTO departments (
+                department_name
+            )
+            VALUES (?)
+        """, (
+            department.department_name,
+        ))
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+
+    except sqlite3.IntegrityError:
+        print("Error: Department already exists.")
+
+    finally:
+        connection.close()
 
 def get_departments():
     connection = sqlite3.connect("university.db")
@@ -208,25 +224,31 @@ def add_course(course):
     connection = sqlite3.connect("university.db")
     cursor = connection.cursor()
 
-    cursor.execute("""
-    INSERT INTO courses (
-        course_code,
-        course_title,
-        course_unit,
-        semester,
-        department_id
-    )
-    VALUES (?, ?, ?, ?, ?)
-    """, (
-        course.course_code,
-        course.course_title,
-        course.course_unit,
-        course.semester,
-        course.department_id
-    ))
+    try:
+        cursor.execute("""
+            INSERT INTO courses (
+                course_code,
+                course_title,
+                course_unit,
+                semester,
+                department_id
+            )
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            course.course_code,
+            course.course_title,
+            course.course_unit,
+            course.semester,
+            course.department_id
+        ))
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+
+    except sqlite3.IntegrityError:
+        print("Error: Course code already exists or department does not exist.")
+
+    finally:
+        connection.close()
 
 
 def get_courses():
@@ -287,31 +309,37 @@ def add_result(result):
     connection = sqlite3.connect("university.db")
     cursor = connection.cursor()
 
-    cursor.execute("""
-        INSERT INTO results (
-            student_id,
-            course_code,
-            test_score,
-            exam_score,
-            total_score,
-            grade,
-            grade_point,
-            quality_point
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        result.student_id,
-        result.course_code,
-        result.test_score,
-        result.exam_score,
-        result.total_score,
-        result.grade,
-        result.grade_point,
-        result.quality_point
-    ))
+    try:
+        cursor.execute("""
+            INSERT INTO results (
+                student_id,
+                course_code,
+                test_score,
+                exam_score,
+                total_score,
+                grade,
+                grade_point,
+                quality_point
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            result.student_id,
+            result.course_code,
+            result.test_score,
+            result.exam_score,
+            result.total_score,
+            result.grade,
+            result.grade_point,
+            result.quality_point
+        ))
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+
+    except sqlite3.IntegrityError:
+        print("Error: Result already exists or student/course does not exist.")
+
+    finally:
+        connection.close()
 
 
 def get_results():
@@ -373,23 +401,32 @@ def add_attendance(attendance):
     connection = sqlite3.connect("university.db")
     cursor = connection.cursor()
 
-    cursor.execute("""
-        INSERT INTO attendance (
-            student_id,
-            course_code,
-            attendance_date,
-            status
-        )
-        VALUES (?, ?, ?, ?)
-    """, (
-        attendance.student_id,
-        attendance.course_code,
-        attendance.attendance_date,
-        attendance.status
-    ))
+    try:
+        cursor.execute("""
+            INSERT INTO attendance (
+                student_id,
+                course_code,
+                attendance_date,
+                status
+            )
+            VALUES (?, ?, ?, ?)
+        """, (
+            attendance.student_id,
+            attendance.course_code,
+            attendance.attendance_date,
+            attendance.status
+        ))
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+
+    except sqlite3.IntegrityError:
+        print(
+            "Error: Student or course does not exist, "
+            "or attendance record already exists."
+        )
+
+    finally:
+        connection.close()
 
 
 def get_attendance():

@@ -79,6 +79,7 @@ def register_student():
 def view_students():
     students = database.get_students()
 
+
     if not students:
         print("No students found.")
     else:
@@ -174,11 +175,21 @@ def update_student():
         for department in departments:
             print(f"{department[0]}. {department[1]}")
 
-        new_value = int(input("Enter new Department ID: "))
-        field = "department_id"
+        try:
+            new_value = int(input("Enter new Department ID: "))
+        except ValueError:
+            print("Invalid Department ID. Please enter a number.")
+            return
 
+        field = "department_id"
+    
     elif choice == "6":
-        new_value = int(input("Enter new level: "))
+        try:
+            new_value = int(input("Enter new level: "))
+        except ValueError:
+            print("Invalid level. Please enter a number.")
+            return
+
         field = "level"
 
     elif choice == "7":
@@ -258,3 +269,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+print(view_students)
